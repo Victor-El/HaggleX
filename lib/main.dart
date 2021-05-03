@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:haggle_x/auth/login/login_screen.dart';
+import 'package:haggle_x/auth/signup/country_codes/blocs/country_code_change_notifier.dart';
+import 'package:haggle_x/auth/signup/create_account/create_account_screen.dart';
+import 'package:haggle_x/auth/verify_account/verify_account_screen.dart';
 import 'package:haggle_x/splash/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'auth/signup/country_codes/country_codes_screen.dart';
 
@@ -25,17 +29,22 @@ class HaggleXApp extends StatelessWidget {
     );
     return GraphQLProvider(
       client: client,
-      child: MaterialApp(
-        routes: {
-          "/": (ctx) => SplashScreen(),
-          "/login": (ctx) => LoginScreen(),
-          "/country_codes": (ctx) => CountryCodeScreen(),
-        },
-        theme: ThemeData(
-          primaryColor: Color(0xFF2E1963),
-          scaffoldBackgroundColor: Color(0xFF2E1963),
-          accentColor: Color(0xFFBA3AF9),
-          buttonColor: Color(0xFFFFC175),
+      child: ChangeNotifierProvider<CountryCodeChangeNotifier>(
+        create: (context) => CountryCodeChangeNotifier(),
+        child: MaterialApp(
+          routes: {
+            "/": (ctx) => SplashScreen(),
+            "/login": (ctx) => LoginScreen(),
+            "/country_codes": (ctx) => CountryCodeScreen(),
+            "/sign_up": (ctx) => CreateAccountScreen(),
+            "/verify_account": (ctx) => VerifyAccountScreen(),
+          },
+          theme: ThemeData(
+            primaryColor: Color(0xFF2E1963),
+            scaffoldBackgroundColor: Color(0xFF2E1963),
+            accentColor: Color(0xFFBA3AF9),
+            buttonColor: Color(0xFFFFC175),
+          ),
         ),
       ),
     );

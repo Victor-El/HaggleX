@@ -77,7 +77,9 @@ class LoginScreen extends StatelessWidget {
                       ),
                       FormPadding(),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/sign_up");
+                        },
                         child: Text(
                           "New User? Create Account",
                           style: TextStyle(

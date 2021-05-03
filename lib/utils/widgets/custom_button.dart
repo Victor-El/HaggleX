@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
       child: Text(text),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
-          EdgeInsets.all(FORM_PADDING * 2),
+          EdgeInsets.all(FORM_PADDING * 1.2),
         ),
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         minimumSize: MaterialStateProperty.all(
