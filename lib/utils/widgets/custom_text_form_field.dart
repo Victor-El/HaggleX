@@ -34,7 +34,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   void initState() {
-    _showPassword = false;
+    _showPassword = widget.isPasswordField == null ? false : !widget.isPasswordField;
     _focusNode = FocusNode();
     _showLabel = false;
     _focusNode.addListener(() {
@@ -67,7 +67,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       keyboardType: widget.keyboardType,
       validator: widget.validator,
       style: TextStyle(color: widget.textColor),
-      obscureText: _showPassword,
+      obscureText: !_showPassword,
       decoration: InputDecoration(
         suffixIcon: widget.isPasswordField
             ? IconButton(

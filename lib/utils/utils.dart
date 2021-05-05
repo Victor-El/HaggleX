@@ -29,3 +29,13 @@ String referralLinkValidator(String referralLink) {
       ? null
       : "Enter a valid referral link";
 }
+
+String verificationCodeValidator(String verificationCode) {
+  try {
+    int.parse(verificationCode);
+  } catch(Exception) {
+    return "Enter a numeric code";
+  }
+
+  return verificationCode.trim().isNotEmpty ? null : "Enter verification code";
+}

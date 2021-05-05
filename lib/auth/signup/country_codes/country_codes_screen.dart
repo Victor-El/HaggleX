@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:haggle_x/auth/signup/country_codes/blocs/country_code_change_notifier.dart';
 import 'package:haggle_x/auth/signup/country_codes/models/country_code.dart';
 import 'package:haggle_x/auth/signup/country_codes/services/country_code_json_service.dart';
@@ -55,91 +56,94 @@ class _CountryCodeScreenState extends State<CountryCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(SCREEN_PADDING),
-        child: Column(
-          children: [
-            FormPadding(),
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(15),
-                suffixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white70,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(SCREEN_PADDING),
+          child: Column(
+            children: [
+              FormPadding(),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(15),
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: Colors.white70,
+                  ),
+                  hintText: "Search for country",
+                  hintStyle: TextStyle(color: Colors.white70),
+                  fillColor: Colors.white38,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    gapPadding: 20,
+                  ),
                 ),
-                hintText: "Search for country",
-                hintStyle: TextStyle(color: Colors.white70),
-                fillColor: Colors.white38,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                  gapPadding: 20,
-                ),
+                textInputAction: TextInputAction.search,
+                onChanged: _searchFieldOnChanged,
+                onEditingComplete: _onEditingComplete,
               ),
-              textInputAction: TextInputAction.search,
-              onChanged: _searchFieldOnChanged,
-              onEditingComplete: _onEditingComplete,
-            ),
-            FormPadding(0.5),
-            Divider(
-              thickness: 1,
-              color: Colors.white54,
-            ),
-            FormPadding(0.2),
-            FutureBuilder(
-                future: _countryCodesFuture,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.data != null) {
-                    _countryCodes.addAll(snapshot.data);
-                    if (_filterableCountryCodes == null) {
-                      _filterableCountryCodes =
-                      List<CountryCode>.empty(growable: true);
+              FormPadding(0.5),
+              Divider(
+                thickness: 1,
+                color: Colors.white54,
+              ),
+              FormPadding(0.2),
+              FutureBuilder(
+                  future: _countryCodesFuture,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data != null) {
+                      _countryCodes.addAll(snapshot.data);
+                      if (_filterableCountryCodes == null) {
+                        _filterableCountryCodes =
+                        List<CountryCode>.empty(growable: true);
+                      }
+                      if (_filterableCountryCodes.isEmpty) {
+                        _filterableCountryCodes.addAll(_countryCodes);
+                      }
                     }
-                    if (_filterableCountryCodes.isEmpty) {
-                      _filterableCountryCodes.addAll(_countryCodes);
-                    }
-                  }
-                  return snapshot.data == null
-                      ? Container(
-                          child: Center(
-                            child: SizedBox(
-                              width: 200,
-                              height: 200,
-                              child: CircularProgressIndicator(),
+                    return snapshot.data == null
+                        ? Container(
+                            child: Center(
+                              child: SizedBox(
+                                width: 200,
+                                height: 200,
+                                child: CircularProgressIndicator(),
+                              ),
                             ),
-                          ),
-                        )
-                      : Expanded(
-                          child: Container(
-                            child: ListView.builder(
-                              itemCount: _filterableCountryCodes.length,
-                              itemBuilder: (ctx, idx) {
-                                return CountryCodeWidget(
-                                  key: ValueKey(idx),
-                                  flag: _filterableCountryCodes[idx].flag,
-                                  dialCode:
-                                      _filterableCountryCodes[idx].dialCode,
-                                  name: _filterableCountryCodes[idx].name,
-                                  onClick: () {
-                                    Provider.of<CountryCodeChangeNotifier>(
-                                            context,
-                                            listen: false)
-                                        .updateCountryCode(CountryCode(
-                                            _filterableCountryCodes[idx].name,
-                                            _filterableCountryCodes[idx]
-                                                .dialCode,
-                                            _filterableCountryCodes[idx].flag));
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              },
+                          )
+                        : Expanded(
+                            child: Container(
+                              child: ListView.builder(
+                                itemCount: _filterableCountryCodes.length,
+                                itemBuilder: (ctx, idx) {
+                                  return CountryCodeWidget(
+                                    key: ValueKey(idx),
+                                    flag: _filterableCountryCodes[idx].flag,
+                                    dialCode:
+                                        _filterableCountryCodes[idx].dialCode,
+                                    name: _filterableCountryCodes[idx].name,
+                                    onClick: () {
+                                      Provider.of<CountryCodeChangeNotifier>(
+                                              context,
+                                              listen: false)
+                                          .updateCountryCode(CountryCode(
+                                              _filterableCountryCodes[idx].name,
+                                              _filterableCountryCodes[idx]
+                                                  .dialCode,
+                                              _filterableCountryCodes[idx].flag));
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        );
-                }),
-          ],
+                          );
+                  }),
+            ],
+          ),
         ),
       ),
     );
